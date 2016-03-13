@@ -23,7 +23,7 @@ brightRed = (255,0,0)
 brightBlue = (0,0,255)
 brightGreen = (0,255,0)
 
-#Initialise screen
+#Initialise gameDisplay
 pygame.init()
 gameDisplay = pygame.display.set_mode((displayWidth, displayHeight))
 pygame.display.set_caption("Bargain Hunter!")
@@ -52,7 +52,6 @@ northRightImg = pygame.image.load('images/northfacingright.png')
 southImg = pygame.image.load('images/southfacing.png')
 southLeftImg = pygame.image.load('images/southfacingleft.png')
 southRightImg = pygame.image.load('images/southfacingright.png')
-
 
 shopkeepEastImg = pygame.image.load('images/shopkeepeastfacing.png') 
 shopkeepEastLeftImg = pygame.image.load('images/shopkeepeastfacingleft.png') 
@@ -123,7 +122,144 @@ class Coin(pygame.sprite.Sprite):
     def setPosition(self, x, y):
         self.rect.x = x
         self.rect.y = y
+
+# Creates a fade effect by incrementing the transparency of a black surface on top of gameDisplay
+class CrossFade(pygame.sprite.Sprite):
+    def __init__(self, gameDisplay):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface(gameDisplay.get_size())
+        self.image = self.image.convert()
+        self.image.fill((0, 0, 0))
+
+        #get the Rect dimensions
+        self.rect = self.image.get_rect()
+
+        #fade_dir determines whether to fade in our fade out
+        self.fade_dir = 1
         
+        #trans_value is the degree of transparency.
+        #255 is opaque/0 is fully transparent
+        self.trans_value = 0
+        
+        #fade_speed is the difference in transparency after each delay
+        self.fade_speed = 2
+
+        #delay helps to dynamically adjust the number of frames between fades
+        self.delay = 1
+
+        #increment increases each frame (each call to update)
+        #until it is equal to our delay (see update() below)
+        self.increment = 0
+
+        #initialize our transparency (at opaque)
+        self.image.set_alpha(self.trans_value)
+
+        #set position of the black Surface
+        self.rect.centerx = 400
+        self.rect.centery = 300
+
+        self.done = False
+        
+    def update(self):
+        self.image.set_alpha(self.trans_value)
+        #increase increment
+        self.increment += 1
+        
+        if self.increment >= self.delay:
+            self.increment = 0
+
+            #Fade in
+            if self.fade_dir > 0:
+                print("Got here instead")
+                #make sure the transparent value doesn't go negative
+                if self.trans_value - self.fade_speed < 0:
+                    self.trans_value = 0
+                #increase transparency of the black Surface by decreasing its alpha
+                else:
+                    self.trans_value -= self.fade_speed
+
+            #Fade out
+            elif self.fade_dir < 0:
+                print("Got here")
+                #make sure transparent value doesn't go above 255
+                if self.trans_value + self.delay > 255:
+                    self.trans_value = 255
+                    self.done = True
+                #increase opacity of black Surface
+                else:
+                    self.trans_value += self.fade_speed
+
+
+def transition(gameDisplay):
+
+    running = True
+    
+    #image to fade over
+    gameDisplay.blit(shopImg, (0,0))        
+    fade = CrossFade(gameDisplay)
+    allSprites = pygame.sprite.Group(fade)
+    
+    while running:
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                keepPlaying = False
+        if fade.trans_value == 0:
+            pygame.time.wait(1000) #delays the animation for number of milliseconds
+            fade.fade_dir *= -1
+        if fade.trans_value == 255:
+            pygame.time.wait(1000)
+        
+
+        #C.U.D. Sprite Group Dirty Blitting
+        allSprites.clear(gameDisplay, shopImg)
+        allSprites.update()
+        if fade.trans_value <= 122:
+            spriteGroup.draw(gameDisplay)
+            itemGroup.draw(gameDisplay)
+        allSprites.draw(gameDisplay)
+        
+        #refresh the gameDisplay
+        pygame.display.flip()
+
+        if fade.done == True:
+            print(pc.sector)
+            gameDisplay.fill(white)
+            spriteGroup.remove(shopkeeper)
+            if pc.sector == "topleft":
+                gameDisplay.blit(mapImg, (0, 0))
+            elif pc.sector == "topright":
+                gameDisplay.blit(mapImg, (-800, 0))
+            elif pc.sector == "bottomleft":
+                gameDisplay.blit(mapImg, (0, -352))
+            elif pc.sector == "bottomright":
+                gameDisplay.blit(mapImg, (-800, -352))
+            while keepPlaying:
+                clock.tick(60)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        keepPlaying = False
+                if fade.trans_value == 255:
+                    pygame.time.wait(1000)
+                    fade.fade_dir *= -1
+                if fade.trans_value >= 200:
+                    spriteGroup.draw(gameDisplay)
+                if fade.trans_value == 0:
+                    return
+
+                allSprites.clear(gameDisplay, mapImg)
+                allSprites.update()
+                if pc.sector == "topleft":
+                    gameDisplay.blit(mapImg, (0, 0))
+                elif pc.sector == "topright":
+                    gameDisplay.blit(mapImg, (-800, 0))
+                elif pc.sector == "bottomleft":
+                    gameDisplay.blit(mapImg, (0, -352))
+                elif pc.sector == "bottomright":
+                    gameDisplay.blit(mapImg, (-800, -352))
+                allSprites.draw(gameDisplay)
+                pygame.display.flip()
+
 
 #Deals with the player character's movement, and changing of map quadrants
 class Player(pygame.sprite.Sprite):
@@ -229,11 +365,13 @@ class Player(pygame.sprite.Sprite):
                 self.collided = True
             elif ( (self.rect.x == 609) and (193 < self.rect.y + yChange < 225) ) or ( (self.rect.x == 641) and (193 < self.rect.y + yChange < 225) ):
                 shopInterior(imgOne,shopImg,"phones")
-                self.rect.x, self.rect.y = 641,225
                 yChange = 1
                 direction = None
                 itemGroup.empty()
                 itemGroup.add(i1,i2,i3,i4,i5,i6)
+                transition(gameDisplay)
+                shopkeeper.remove(spriteGroup)
+                self.rect.x, self.rect.y = 641,225
             elif (self.rect.x + xChange) < 1:
                 self.sector = "topleft"
                 self.rect.x = 801
@@ -271,11 +409,13 @@ class Player(pygame.sprite.Sprite):
                 self.collided = True
             elif ( (self.rect.x == 161) and (417 < self.rect.y + yChange < 449) ) or ( (self.rect.x == 193) and (417 < self.rect.y + yChange < 449) ):
                 shopInterior(imgOne,shopImg,"consoles")
-                self.rect.x, self.rect.y = 161, 449
                 yChange = 1
                 direction = None
                 itemGroup.empty()
                 itemGroup.add(i1,i2,i3,i4,i5,i6)
+                transition(gameDisplay)
+                shopkeeper.remove(spriteGroup)
+                self.rect.x, self.rect.y = 161, 449
             elif (self.rect.x + xChange) > 769:
                 self.sector = "bottomright"
                 self.rect.x = -31
@@ -311,11 +451,13 @@ class Player(pygame.sprite.Sprite):
                 self.collided = True
             elif ((self.rect.x == 545) and (417 < self.rect.y + yChange < 449)) or ((self.rect.x == 577) and (417 < self.rect.y + yChange < 449)):
                 shopInterior(imgOne,shopImg,"laptop")
-                self.rect.x, self.rect.y = 577,449
                 yChange = 1
                 direction = None
                 itemGroup.empty()
                 itemGroup.add(i1,i2,i3,i4,i5,i6)
+                transition(gameDisplay)
+                shopkeeper.remove(spriteGroup)
+                self.rect.x, self.rect.y = 577,449
             elif (self.rect.x + xChange) < 1:
                 self.sector = "bottomleft"
                 self.rect.x = 801
@@ -464,9 +606,7 @@ def shopInterior(player, shopBackground, itemtype):
     gameDisplay.fill(white)
     gameDisplay.blit(shopBackground, (0,0))
     gameDisplay.blit(scrollImg, (80,0))
-    shopkeeper = NPC()
-    shopkeeper.setImage("images/shopkeepsouthfacing.png")
-    shopkeeper.setPosition(416, 481)
+    
 
     if itemtype == "laptop":
         for i in itemGroup:
@@ -1012,7 +1152,6 @@ def shopInterior(player, shopBackground, itemtype):
             result = button(565, 300, 110, 25, result)
             if result == True:
                 print("Exit")
-                shopkeeper.remove(spriteGroup)
                 return
 
 # end game sorting. 
@@ -1197,6 +1336,8 @@ def gameLoop():
     for i in itemGroup:
         i.setImage("images/coinone.png")
     checkout.setImage("images/checkout.png")
+    shopkeeper.setImage("images/shopkeepsouthfacing.png")
+    shopkeeper.setPosition(416, 481)
 
     pc.setPosition(193, 97)
     checkout.setPosition(129, 257)
@@ -1275,6 +1416,8 @@ pc = Player()
 c1,c2,c3,c4,c5,c6,c7,c8,c9 = Coin(),Coin(),Coin(),Coin(),Coin(),Coin(),Coin(),Coin(),Coin()
 i1,i2,i3,i4,i5,i6 = Item(),Item(),Item(),Item(),Item(),Item()
 checkout = NPC()
+shopkeeper = NPC()
+
 
 itemGroup.add(i1,i2,i3,i4,i5,i6)
 coinGroup.add(c1,c2,c3,c4,c5,c6,c7,c8,c9)

@@ -2,6 +2,7 @@ import pygame
 import time
 import random
 import sys
+import csv
 from pygame import * 
 displayWidth = 800
 displayHeight = 600
@@ -230,6 +231,8 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x, self.rect.y = 641,225
                 yChange = 1
                 direction = None
+                itemGroup.empty()
+                itemGroup.add(i1,i2,i3,i4,i5,i6)
             elif (self.rect.x + xChange) < 1:
                 self.sector = "topleft"
                 self.rect.x = 801
@@ -270,6 +273,8 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x, self.rect.y = 161, 449
                 yChange = 1
                 direction = None
+                itemGroup.empty()
+                itemGroup.add(i1,i2,i3,i4,i5,i6)
             elif (self.rect.x + xChange) > 769:
                 self.sector = "bottomright"
                 self.rect.x = -31
@@ -308,6 +313,8 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x, self.rect.y = 577,449
                 yChange = 1
                 direction = None
+                itemGroup.empty()
+                itemGroup.add(i1,i2,i3,i4,i5,i6)
             elif (self.rect.x + xChange) < 1:
                 self.sector = "bottomleft"
                 self.rect.x = 801
@@ -447,16 +454,6 @@ def update(posx, posy, xChange, yChange, sect, img, currentSpriteGroup):
     pygame.display.update()
     return posx, posy
 
-#bubblesort function
-def bubblesort (alist):
-    for passnum in range(len(alist)-1,0,-1):
-                          for i in range (passnum):
-                            if alist[i]>alist[i+1]:
-                                temp = alist[i]
-                                alist[i] = alist[i+1]
-                                alist[i+1] = temp
-    return(alist)
-
 #This function should run when entering a shop. 
 def shopInterior(player, shopBackground, itemtype):
     inside = True
@@ -527,13 +524,13 @@ def shopInterior(player, shopBackground, itemtype):
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                         elif i2.rect.x > shopkeeper.rect.x:
                             shopkeeper.rect.x += 1
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                     while i2.rect.y > shopkeeper.rect.y or i2.rect.y < shopkeeper.rect.y:
                         gameDisplay.fill(white)
                         gameDisplay.blit(shopBackground, (0,0))
@@ -542,13 +539,13 @@ def shopInterior(player, shopBackground, itemtype):
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                         elif i2.rect.y < shopkeeper.rect.y:
                             shopkeeper.rect.y -= 1
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
 
                     i2.remove(itemGroup)
 
@@ -560,13 +557,13 @@ def shopInterior(player, shopBackground, itemtype):
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                         elif i5.rect.x > shopkeeper.rect.x:
                             shopkeeper.rect.x += 1
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                     while i5.rect.y > shopkeeper.rect.y or i5.rect.y < shopkeeper.rect.y:
                         gameDisplay.fill(white)
                         gameDisplay.blit(shopBackground, (0,0))
@@ -575,13 +572,13 @@ def shopInterior(player, shopBackground, itemtype):
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                         elif i5.rect.y < shopkeeper.rect.y:
                             shopkeeper.rect.y -= 1
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
 
                     i5.remove(itemGroup)
                         
@@ -608,7 +605,7 @@ def shopInterior(player, shopBackground, itemtype):
                 else:
                     print("You do not have enough coins.")
 
-            result = button(290, 300, 110, 50, result)
+            result = button(290, 300, 110, 30, result)
             if result == True:
                     if pc.coins >= 2:
                         print("You have enough coins. Searching for 2 minutes")
@@ -625,13 +622,13 @@ def shopInterior(player, shopBackground, itemtype):
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                             elif i2.rect.x > shopkeeper.rect.x:
                                 shopkeeper.rect.x += 1
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                         while i2.rect.y > shopkeeper.rect.y or i2.rect.y < shopkeeper.rect.y:
                             gameDisplay.fill(white)
                             gameDisplay.blit(shopBackground, (0,0))
@@ -640,13 +637,13 @@ def shopInterior(player, shopBackground, itemtype):
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                             elif i2.rect.y < shopkeeper.rect.y:
                                 shopkeeper.rect.y -= 1
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
 
                         i2.remove(itemGroup)
 
@@ -658,13 +655,13 @@ def shopInterior(player, shopBackground, itemtype):
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                             elif i5.rect.x > shopkeeper.rect.x:
                                 shopkeeper.rect.x += 1
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                         while i5.rect.y > shopkeeper.rect.y or i5.rect.y < shopkeeper.rect.y:
                             gameDisplay.fill(white)
                             gameDisplay.blit(shopBackground, (0,0))
@@ -673,13 +670,13 @@ def shopInterior(player, shopBackground, itemtype):
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                             elif i5.rect.y < shopkeeper.rect.y:
                                 shopkeeper.rect.y -= 1
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
 
                         i5.remove(itemGroup)
 
@@ -691,13 +688,13 @@ def shopInterior(player, shopBackground, itemtype):
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                             elif i6.rect.x > shopkeeper.rect.x:
                                 shopkeeper.rect.x += 1
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                         while i6.rect.y > shopkeeper.rect.y or i6.rect.y < shopkeeper.rect.y:
                             gameDisplay.fill(white)
                             gameDisplay.blit(shopBackground, (0,0))
@@ -706,13 +703,13 @@ def shopInterior(player, shopBackground, itemtype):
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                             elif i6.rect.y < shopkeeper.rect.y:
                                 shopkeeper.rect.y += 1
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
 
                         i6.remove(itemGroup)
 
@@ -724,13 +721,13 @@ def shopInterior(player, shopBackground, itemtype):
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                             elif i4.rect.x > shopkeeper.rect.x:
                                 shopkeeper.rect.x += 1
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                         while i4.rect.y > shopkeeper.rect.y or i4.rect.y < shopkeeper.rect.y:
                             gameDisplay.fill(white)
                             gameDisplay.blit(shopBackground, (0,0))
@@ -739,13 +736,13 @@ def shopInterior(player, shopBackground, itemtype):
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                             elif i4.rect.y < shopkeeper.rect.y:
                                 shopkeeper.rect.y -= 1
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
 
                         i4.remove(itemGroup)
                         gameDisplay.fill(white)
@@ -776,7 +773,7 @@ def shopInterior(player, shopBackground, itemtype):
                     else:
                         print("You do not have enough coins.")
 
-            result = button(425, 300, 110, 50, result)
+            result = button(425, 300, 110, 30, result)
             if result == True:
                 if pc.coins >= 3:
                     print("You have enough coins. Searching for 3 minutes")
@@ -793,13 +790,13 @@ def shopInterior(player, shopBackground, itemtype):
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                         elif i2.rect.x > shopkeeper.rect.x:
                             shopkeeper.rect.x += 1
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
 
                     while i2.rect.y > shopkeeper.rect.y or i2.rect.y < shopkeeper.rect.y:
                         gameDisplay.fill(white)
@@ -809,13 +806,13 @@ def shopInterior(player, shopBackground, itemtype):
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                         elif i2.rect.y < shopkeeper.rect.y:
                             shopkeeper.rect.y -= 1
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
 
                     i2.remove(itemGroup)
 
@@ -827,13 +824,13 @@ def shopInterior(player, shopBackground, itemtype):
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                         elif i5.rect.x > shopkeeper.rect.x:
                             shopkeeper.rect.x += 1
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
 
                     while i5.rect.y > shopkeeper.rect.y or i5.rect.y < shopkeeper.rect.y:
                         gameDisplay.fill(white)
@@ -843,115 +840,115 @@ def shopInterior(player, shopBackground, itemtype):
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                         elif i5.rect.y < shopkeeper.rect.y:
                             shopkeeper.rect.y -= 1
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
 
                     i5.remove(itemGroup)
                         
                     while i6.rect.x < shopkeeper.rect.x or  i6.rect.x > shopkeeper.rect.x:
-                            gameDisplay.fill(white)
-                            gameDisplay.blit(shopBackground, (0,0))
-                            if i6.rect.x < shopkeeper.rect.x:
-                                shopkeeper.rect.x -= 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
-                            elif i6.rect.x > shopkeeper.rect.x:
-                                shopkeeper.rect.x += 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
+                        gameDisplay.fill(white)
+                        gameDisplay.blit(shopBackground, (0,0))
+                        if i6.rect.x < shopkeeper.rect.x:
+                            shopkeeper.rect.x -= 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
+                        elif i6.rect.x > shopkeeper.rect.x:
+                            shopkeeper.rect.x += 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
 
                     while i6.rect.y > shopkeeper.rect.y or i6.rect.y < shopkeeper.rect.y:
-                            gameDisplay.fill(white)
-                            gameDisplay.blit(shopBackground, (0,0))
-                            if i6.rect.y > shopkeeper.rect.y:
-                                shopkeeper.rect.y += 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
-                            elif i6.rect.y < shopkeeper.rect.y:
-                                shopkeeper.rect.y += 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
+                        gameDisplay.fill(white)
+                        gameDisplay.blit(shopBackground, (0,0))
+                        if i6.rect.y > shopkeeper.rect.y:
+                            shopkeeper.rect.y += 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
+                        elif i6.rect.y < shopkeeper.rect.y:
+                            shopkeeper.rect.y += 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
 
                     i6.remove(itemGroup)
 
                     while i4.rect.x < shopkeeper.rect.x or  i4.rect.x > shopkeeper.rect.x:
-                            gameDisplay.fill(white)
-                            gameDisplay.blit(shopBackground, (0,0))
-                            if i4.rect.x < shopkeeper.rect.x:
-                                shopkeeper.rect.x -= 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
-                            elif i4.rect.x > shopkeeper.rect.x:
-                                shopkeeper.rect.x += 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
+                        gameDisplay.fill(white)
+                        gameDisplay.blit(shopBackground, (0,0))
+                        if i4.rect.x < shopkeeper.rect.x:
+                            shopkeeper.rect.x -= 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
+                        elif i4.rect.x > shopkeeper.rect.x:
+                            shopkeeper.rect.x += 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
 
                     while i4.rect.y > shopkeeper.rect.y or i4.rect.y < shopkeeper.rect.y:
-                            gameDisplay.fill(white)
-                            gameDisplay.blit(shopBackground, (0,0))
-                            if i4.rect.y > shopkeeper.rect.y:
-                                shopkeeper.rect.y -= 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
-                            elif i4.rect.y < shopkeeper.rect.y:
-                                shopkeeper.rect.y -= 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
+                        gameDisplay.fill(white)
+                        gameDisplay.blit(shopBackground, (0,0))
+                        if i4.rect.y > shopkeeper.rect.y:
+                            shopkeeper.rect.y -= 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
+                        elif i4.rect.y < shopkeeper.rect.y:
+                            shopkeeper.rect.y -= 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
 
                     i4.remove(itemGroup)
                                 
                     while i1.rect.x < shopkeeper.rect.x or  i1.rect.x > shopkeeper.rect.x:
-                            gameDisplay.fill(white)
-                            gameDisplay.blit(shopBackground, (0,0))
-                            if i1.rect.x < shopkeeper.rect.x:
-                                shopkeeper.rect.x -= 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
-                            elif i1.rect.x > shopkeeper.rect.x:
-                                shopkeeper.rect.x += 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
+                        gameDisplay.fill(white)
+                        gameDisplay.blit(shopBackground, (0,0))
+                        if i1.rect.x < shopkeeper.rect.x:
+                            shopkeeper.rect.x -= 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
+                        elif i1.rect.x > shopkeeper.rect.x:
+                            shopkeeper.rect.x += 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
 
                     while i1.rect.y > shopkeeper.rect.y or i1.rect.y < shopkeeper.rect.y:
-                            gameDisplay.fill(white)
-                            gameDisplay.blit(shopBackground, (0,0))
-                            if i1.rect.y > shopkeeper.rect.y:
-                                shopkeeper.rect.y -= 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
-                            elif i1.rect.y < shopkeeper.rect.y:
-                                shopkeeper.rect.y -= 1
-                                spriteGroup.draw(gameDisplay)
-                                itemGroup.draw(gameDisplay)
-                                pygame.display.update()
-                                pygame.time.delay(50)
+                        gameDisplay.fill(white)
+                        gameDisplay.blit(shopBackground, (0,0))
+                        if i1.rect.y > shopkeeper.rect.y:
+                            shopkeeper.rect.y -= 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
+                        elif i1.rect.y < shopkeeper.rect.y:
+                            shopkeeper.rect.y -= 1
+                            spriteGroup.draw(gameDisplay)
+                            itemGroup.draw(gameDisplay)
+                            pygame.display.update()
+                            pygame.time.delay(30)
 
                     i1.remove(itemGroup)
 
@@ -963,13 +960,13 @@ def shopInterior(player, shopBackground, itemtype):
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
                         elif i3.rect.x > shopkeeper.rect.x:
                             shopkeeper.rect.x += 1
                             spriteGroup.draw(gameDisplay)
                             itemGroup.draw(gameDisplay)
                             pygame.display.update()
-                            pygame.time.delay(50)
+                            pygame.time.delay(30)
 
                         while i3.rect.y > shopkeeper.rect.y or i3.rect.y < shopkeeper.rect.y:
                             gameDisplay.fill(white)
@@ -979,13 +976,13 @@ def shopInterior(player, shopBackground, itemtype):
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
                             elif i3.rect.y < shopkeeper.rect.y:
                                 shopkeeper.rect.y -= 1
                                 spriteGroup.draw(gameDisplay)
                                 itemGroup.draw(gameDisplay)
                                 pygame.display.update()
-                                pygame.time.delay(50)
+                                pygame.time.delay(30)
 
                     i3.remove(itemGroup)
 
@@ -1019,8 +1016,6 @@ def shopInterior(player, shopBackground, itemtype):
 
 # end game sorting. 
 def collected_items():
-    newlist=[]
-    i = 0
     result = None
     showingCollected = True
     #mapImg = pygame.image.load("images/mainmap.png")
@@ -1034,32 +1029,88 @@ def collected_items():
     writeText("Exit", "freesansbold.ttf", 36, 600, 500)
     pygame.display.update()
     print("Got to here")
+
     while showingCollected == True:
+        sortedAttributeList=[]
+        collectedDict = {}
+        sortedCollectedList = []
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 showingCollected = False
                 pygame.quit()
                 sys.exit("Exiting")
                 quit()
+
+            writeText("Price", "freesansbold.ttf", 36, 160, 500)
             result = button (160, 500, 110, 50, result)
             if result == True:
-                f = open ('collecteditems','r')
-                for line in f:
-                    i = line
-                    newlist.append(i[2])
-                f.close()
-                bubblesort(newlist)
+                with open('laptoplist', 'r') as f:
+                    reader = csv.reader(f)
+                    for line in reader:
+                        print("line is",line)
+                        print("line 2 is",line[2])
+                        collectedDict[line[2]] = line
+                        print("collectedDict is",collectedDict)
+                        sortedAttributeList.append(line[2])
+                        print("sortedAttributeList is", sortedAttributeList)
+                bubblesort(sortedAttributeList)
+                print("now sortedAttributeList is", sortedAttributeList)
+                newDictKey = 0
+                for i in sortedAttributeList:
+                    sortedCollectedList.append(collectedDict[i])
+                    print("This sortedAttributeList is", sortedCollectedList)
                 gameDisplay.fill(white)
                 gameDisplay.blit(mapImg, (-800, 0))
                 currentSpriteGroup.draw(gameDisplay)
                 gameDisplay.blit(scrollImg, (80, 0))
-                writeText(str(newlist),"freesansbold.ttf",36,160,100)
-                pygame.display.update()
+                textposy = 100
+                for i in range(len(sortedCollectedList)):
+                    writeText(str(sortedCollectedList[i]), "freesansbold.ttf", 32, 160, textposy)
+                    textposy += 30
+
+            writeText("Rating", "freesansbold.ttf", 36, 300, 500)
+            result = button(300, 500, 110, 50, result)
+            if result == True:
+                with open('laptoplist', 'r') as f:
+                    reader = csv.reader(f)
+                    for line in reader:
+                        print("line is",line)
+                        print("line 3 is",line[3])
+                        collectedDict[line[3]] = line
+                        print("collectedDict is",collectedDict)
+                        sortedAttributeList.append(line[3])
+                        print("sortedAttributeList is", sortedAttributeList)
+                bubblesort(sortedAttributeList)
+                print("now sortedAttributeList is", sortedAttributeList)
+                newDictKey = 0
+                for i in sortedAttributeList:
+                    sortedCollectedList.append(collectedDict[i])
+                    print("This sortedAttributeList is", sortedCollectedList)
+                gameDisplay.fill(white)
+                gameDisplay.blit(mapImg, (-800, 0))
+                currentSpriteGroup.draw(gameDisplay)
+                gameDisplay.blit(scrollImg, (80, 0))
+                textposy = 100
+                for i in range(len(sortedCollectedList)):
+                    writeText(str(sortedCollectedList[i]), "freesansbold.ttf", 32, 160, textposy)
+                    textposy += 30
+
             result = button(600,500,110,50,result)
+            writeText("Exit", "freesansbold.ttf", 36, 600, 500)
+            pygame.display.update()
             if result == True:
                 update(pc.rect.x, pc.rect.y, 0, 0, "topright", mapImg, currentSpriteGroup)
                 return
-            
+
+#bubblesort function
+def bubblesort (alist):
+    for passnum in range(len(alist)-1,0,-1):
+                          for i in range (passnum):
+                            if alist[i]>alist[i+1]:
+                                temp = alist[i]
+                                alist[i] = alist[i+1]
+                                alist[i+1] = temp
+    return(alist)
                 
 def coincollecting(posx, posy, item):
     while item.rect.x < shopkeeper.rect.x or  item.rect.x > shopkeeper.rect.x:

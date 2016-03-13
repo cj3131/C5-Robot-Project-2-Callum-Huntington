@@ -69,7 +69,7 @@ shopkeepSouthImg = pygame.image.load('images/shopkeepsouthfacing.png')
 shopkeepSouthLeftImg = pygame.image.load('images/shopkeepsouthfacingleft.png') 
 shopkeepSouthRightImg = pygame.image.load('images/shopkeepsouthfacingright.png') 
 
-
+introImg = pygame.image.load("images/intromenu.png")
 mapImg = pygame.image.load("images/mainmap.png")
 shopImg = pygame.image.load('images/shopinteriorone.png')
 startImg = pygame.image.load('images/startmenu.png')
@@ -1190,7 +1190,7 @@ def gameLoop():
     for i in coinGroup:
         i.setImage("images/coinone.png")
     for i in itemGroup:
-        i.setImage ("images/coinone.png")
+        i.setImage("images/coinone.png")
     checkout.setImage("images/checkout.png")
 
     pc.setPosition(193, 97)
@@ -1209,6 +1209,7 @@ def gameLoop():
     gameDisplay.fill(white)
     gameDisplay.blit(mapImg, (0, 0))
     currentSpriteGroup.draw(gameDisplay)
+    gameDisplay.blit(introImg, (176, 108))
     pygame.display.update()
     direction = None
     run = True
@@ -1228,6 +1229,9 @@ def gameLoop():
                     direction = "north"
                 if event.key == pygame.K_DOWN:
                     direction = "south"
+                if event.key == pygame.K_ESCAPE:
+                    update(pc.rect.x, pc.rect.y, 0, 0, pc.sector, mapImg, currentSpriteGroup)
+                    direction = None
                 if event.key == pygame.K_SPACE:
                     if pc.rect.x == 129 and pc.rect.y == 289:
                         collected_items()

@@ -130,18 +130,16 @@ class CrossFade(pygame.sprite.Sprite):
         self.image = pygame.Surface(gameDisplay.get_size())
         self.image = self.image.convert()
         self.image.fill((0, 0, 0))
-
-        #get the Rect dimensions
         self.rect = self.image.get_rect()
 
         #fade_dir determines whether to fade in our fade out
         self.fade_dir = 1
         
-        #trans_value is the degree of transparency.
+        #degree of transparency
         #255 is opaque/0 is fully transparent
-        self.trans_value = 0
+        self.transitionValue = 0
         
-        #fade_speed is the difference in transparency after each delay
+        #difference in transparency after each delay
         self.fade_speed = 2
 
         #delay helps to dynamically adjust the number of frames between fades
@@ -150,19 +148,13 @@ class CrossFade(pygame.sprite.Sprite):
         #increment increases each frame (each call to update)
         #until it is equal to our delay (see update() below)
         self.increment = 0
-
-        #initialize our transparency (at opaque)
-        self.image.set_alpha(self.trans_value)
-
-        #set position of the black Surface
+        self.image.set_alpha(self.transitionValue)
         self.rect.centerx = 400
         self.rect.centery = 300
-
         self.done = False
         
     def update(self):
-        self.image.set_alpha(self.trans_value)
-        #increase increment
+        self.image.set_alpha(self.transitionValue)
         self.increment += 1
         
         if self.increment >= self.delay:
@@ -170,24 +162,18 @@ class CrossFade(pygame.sprite.Sprite):
 
             #Fade in
             if self.fade_dir > 0:
-                print("Got here instead")
-                #make sure the transparent value doesn't go negative
-                if self.trans_value - self.fade_speed < 0:
-                    self.trans_value = 0
-                #increase transparency of the black Surface by decreasing its alpha
+                if self.transitionValue - self.fade_speed < 0:
+                    self.transitionValue = 0
                 else:
-                    self.trans_value -= self.fade_speed
+                    self.transitionValue -= self.fade_speed
 
             #Fade out
             elif self.fade_dir < 0:
-                print("Got here")
-                #make sure transparent value doesn't go above 255
-                if self.trans_value + self.delay > 255:
-                    self.trans_value = 255
+                if self.transitionValue + self.delay > 255:
+                    self.transitionValue = 255
                     self.done = True
-                #increase opacity of black Surface
                 else:
-                    self.trans_value += self.fade_speed
+                    self.transitionValue += self.fade_speed
 
 
 def transition(gameDisplay):
@@ -204,26 +190,21 @@ def transition(gameDisplay):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 keepPlaying = False
-        if fade.trans_value == 0:
+        if fade.transitionValue == 0:
             pygame.time.wait(1000) #delays the animation for number of milliseconds
             fade.fade_dir *= -1
-        if fade.trans_value == 255:
+        if fade.transitionValue == 255:
             pygame.time.wait(1000)
         
-
-        #C.U.D. Sprite Group Dirty Blitting
         allSprites.clear(gameDisplay, shopImg)
         allSprites.update()
-        if fade.trans_value <= 122:
+        if fade.transitionValue <= 122:
             spriteGroup.draw(gameDisplay)
             itemGroup.draw(gameDisplay)
         allSprites.draw(gameDisplay)
-        
-        #refresh the gameDisplay
         pygame.display.flip()
 
         if fade.done == True:
-            print(pc.sector)
             gameDisplay.fill(white)
             spriteGroup.remove(shopkeeper)
             if pc.sector == "topleft":
@@ -239,12 +220,12 @@ def transition(gameDisplay):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         keepPlaying = False
-                if fade.trans_value == 255:
+                if fade.transitionValue == 255:
                     pygame.time.wait(1000)
                     fade.fade_dir *= -1
-                if fade.trans_value >= 200:
+                if fade.transitionValue >= 200:
                     spriteGroup.draw(gameDisplay)
-                if fade.trans_value == 0:
+                if fade.transitionValue == 0:
                     return
 
                 allSprites.clear(gameDisplay, mapImg)
